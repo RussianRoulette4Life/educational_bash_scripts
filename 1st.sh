@@ -14,7 +14,6 @@ VARIABLE_2="value2"
 # Для получения значения переменной перед её именем ставится "$"
 
 ultimate_var="$VARIABLE_1 и $VARIABLE_2"
-script_dir=$(dirname $0)
 echo $ultimate_var
 
 # Значение переменной можно удалить
@@ -52,6 +51,9 @@ if [[ $((10+4)) == "14" && $((1/2)) == 0 ]]; then
 	echo "bash умеет совершать простые математические операции! Но только над целыми числами"
 	pwd
 fi
+
+script_dir="$(dirname $0)"
+abs_script_path="$(realpath $script_dir)/1st.sh"
 
 ## настоятельно рекомендую посмотреть 2nd.sh перед продолжением
 # Теперь for (+ приколы с цветами)
@@ -96,8 +98,14 @@ case $1 in
 esac
 
 # По мелочи: перенапрявления вывода, "конвейер" и пр.
-
-grep -n -E "echo" "$script_dir/1st.sh" > "$script_dir/echoes.txt"
+OUTPUT_FILE="$script_dir/echoes.txt"
+echo "Буду записывать в $OUTPUT_FILE, $0, $BASH_SOURCE"
+## sleep - останавливает исполнение программы на n секунд. Как delay в ардуинке
+sleep 5
+grep -n -E "echo" "$script_dir/1st.sh" > $OUTPUT_FILE
 echo -e "Содержание \e[3mechoes.txt\e[0m: " && cat "$script_dir/echoes.txt"
 rm "$scrip_dir/echoes.txt"
+## alias - создаёт псевдоним для команды или целого списка команд. Применится к вашему терминалу
+## только после ". 1st.sh" или "source 1st.sh", обычно исполнение не сработает
+alias run_1st_again=". $abs_script_path"
 
