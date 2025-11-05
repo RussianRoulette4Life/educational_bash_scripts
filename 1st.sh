@@ -119,6 +119,8 @@ echo "Буду далее записывать в $OUTPUT_FILE"
 
 sleep 5
 
+## Создаёт echoes.txt в каталоге скрипта и заносит туда все строки из
+## 1st.sh, в которых есть слово "echo", включая эту :)
 grep -n -E "echo" "$script_dir/1st.sh" > $OUTPUT_FILE
 echo -e "Содержание \e[3mechoes.txt\e[0m: " && cat "$script_dir/echoes.txt"
 rm "$script_dir/echoes.txt"
@@ -138,3 +140,25 @@ alias run_1st_again=". $abs_script_path"
 ### окружения.
 
 alias hi="echo \"Привет!\" | grep -E \"р|е|т\" --color=auto"
+
+## getopts - обработка простых однобуквенных флагов, со значениями или без.
+## Те флаги, которые после себя ожидают значения, обозначаются "<буква>:", 
+## в то время как флаги без значений - просто "<буква>".
+
+while getopts "A:aB:b" FLAG; do
+	case $FLAG in
+		"A")
+			echo "Получил \"A\" со значением $OPTARG"
+			;;
+		"a")
+			echo "Получил флаг \"а\", без значения"
+			;;
+		"B")
+			CALCULATION_RESULT=$(echo "$OPTARG*10" | bc)
+			echo "Если \"B=$OPTARG\", значит я говорю \"B*10=$CALCULATION_RESULT\""
+			;;
+		"b")
+			echo "Ну и там лол получил \"b\" зачем не очень знаю"
+			;;
+	esac
+done
